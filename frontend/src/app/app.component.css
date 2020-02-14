@@ -1,0 +1,11 @@
+
+div.navbar-right {
+  float: right;
+}
+div.navbar-left {
+  float: left;
+}
+header.bn-header+div.container {
+  clear: both;
+}
+
