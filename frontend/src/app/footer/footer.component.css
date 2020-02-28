@@ -1,0 +1,10 @@
+div.container-fluid {
+  display: flex;
+  justify-content: center;
+}
+ul.nav {
+  text-align: center;
+}
+li.nav-item {
+  display: inline-block;
+}

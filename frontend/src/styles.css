@@ -1,2 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~bootstrap/dist/css/bootstrap.css";
+.bn-header, .bn-footer {
+  background-color: #243756;
+  /*background-color: #1F4BBC;*/
+  color: #FFFFFF;
+}
+
+header.bn-header+div.container {
+  clear: both;
+}
+.bn-header a, .bn-footer a {
+  color: #FFFFFF;
+}
