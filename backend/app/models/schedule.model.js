@@ -205,3 +205,5 @@ Schedule.removeAll = result => {
         result(null, res);
     });
 };
+
+module.exports = Schedule;

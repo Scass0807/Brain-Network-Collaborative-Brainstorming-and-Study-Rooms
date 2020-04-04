@@ -25,8 +25,8 @@ User.create = (newUser, result) => {
                         result(err,null);
                         return;
                     }
-                    console.log("User successfully registered\nResult: ",{id: res.insertId, ...newUser});
-                    result(null,{id: res.insertId, ...newUser});
+                    console.log("User successfully registered\nResult: ",{id: res.insertId, username: newUser.username, email: newUser.email, fname: newUser.fname, lname: newUser.lname});
+                    result(null,{id: res.insertId, username: newUser.username, email: newUser.email, fname: newUser.fname, lname: newUser.lname});
                 });
             }
             else
@@ -39,8 +39,8 @@ User.create = (newUser, result) => {
                         result(err,null);
                         return;
                     }
-                    console.log("User successfully registered\nResult: ",{id: res.insertId, ...newUser});
-                    result(null,{id: res.insertId, ...newUser});
+                    console.log("User successfully registered\nResult: ",{id: res.insertId, username: newUser.username, email: newUser.email, fname: newUser.fname, lname: newUser.lname, admin: newUser.admin});
+                    result(null,{id: res.insertId, username: newUser.username, email: newUser.email, fname: newUser.fname, lname: newUser.lname, admin: newUser.admin});
                 });
             }
         });
@@ -48,7 +48,7 @@ User.create = (newUser, result) => {
 };
 
 User.findById = (userId, result) => {
-  mysql.query(`SELECT * FROM User WHERE userid = ${userId}`, (err,res) => {
+  mysql.query(`SELECT username, email, fname, lname, admin FROM User WHERE userid = ${userId}`, (err,res) => {
       if(err)
       {
           console.log("ERROR: ", err);
@@ -67,7 +67,7 @@ User.findById = (userId, result) => {
 };
 
 User.findByUsername = (username, result) => {
-    mysql.query(`SELECT * FROM User WHERE username = '${username}'`,(err, res) => {
+    mysql.query(`SELECT username, email, fname, lname, admin FROM User WHERE username = '${username}'`,(err, res) => {
         if(err)
         {
             console.log("ERROR: ", err);
@@ -86,7 +86,7 @@ User.findByUsername = (username, result) => {
 };
 
 User.getAll =  result => {
-  mysql.query("SELECT * FROM User", (err, res) => {
+  mysql.query("SELECT username, email, fname, lname, admin FROM User", (err, res) => {
       if(err)
       {
           console.log("ERROR: ", err);

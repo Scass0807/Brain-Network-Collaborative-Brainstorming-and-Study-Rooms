@@ -3,6 +3,9 @@ const router = express.Router();
 
 const groups = require("../controllers/group.controller.js");
 
+//Create Group
+router.post("/", groups.create);
+
 //Get all Groups
 router.get("/", groups.findAll);
 
