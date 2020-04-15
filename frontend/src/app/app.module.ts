@@ -9,6 +9,12 @@ import { AboutComponent } from './about/about.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { ContentComponent } from './content/content.component';
+import { LoginComponent } from './login/login.component';
+import { ProfileComponent } from './profile/profile.component';
+import { GroupcreateComponent } from './groupcreate/groupcreate.component';
+import { GroupdisplayComponent } from './groupdisplay/groupdisplay.component';
+import { PremeetingComponent } from './premeeting/premeeting.component';
+import { ScheduleComponent } from './schedule/schedule.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +23,13 @@ import { ContentComponent } from './content/content.component';
     AboutComponent,
     HeaderComponent,
     FooterComponent,
-    ContentComponent
+    ContentComponent,
+    LoginComponent,
+    ProfileComponent,
+    GroupcreateComponent,
+    GroupdisplayComponent,
+    PremeetingComponent,
+    ScheduleComponent
   ],
   imports: [
     BrowserModule,
