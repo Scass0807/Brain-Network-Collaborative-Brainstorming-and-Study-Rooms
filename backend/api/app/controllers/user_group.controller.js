@@ -13,7 +13,7 @@ exports.create = (req, res) => {
     //Create user_group
     const user_group = new UserGroup ({
         userid: req.body.userid,
-        groupId: req.body.groupId
+        groupId: req.params.groupId
     });
 
     //Store usergroup in db

@@ -17,7 +17,7 @@ import { ContentComponent } from './content/content.component';
     AboutComponent,
     HeaderComponent,
     FooterComponent,
-    ContentComponent
+    ContentComponent,
   ],
   imports: [
     BrowserModule,

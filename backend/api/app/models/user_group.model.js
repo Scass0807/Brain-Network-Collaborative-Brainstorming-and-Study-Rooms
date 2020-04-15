@@ -14,8 +14,8 @@ UserGroup.create = (newUserGroup, result) => {
             result(err,null);
             return;
         }
-        console.log("User successfully added to Group\nResult: ",{newUserGroup});
-        result(null,{newUserGroup});
+        console.log("User successfully added to Group\nResult: ",{...newUserGroup});
+        result(null,{...newUserGroup});
     });
 };
 UserGroup.getAll =  result => {

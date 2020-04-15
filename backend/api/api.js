@@ -14,8 +14,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
     res.json({message: "Welcome to Brain Network server"})
 });
-
+const auth = require("./app/auth/auth.js").router;
 const routes = require("./app/routes/routes.js")(app);
+
+app.use('/auth', auth);
 
 app.listen(3000, () => {
     console.log("Server Running");

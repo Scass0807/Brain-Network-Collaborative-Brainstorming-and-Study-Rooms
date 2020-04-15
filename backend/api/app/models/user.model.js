@@ -25,8 +25,8 @@ User.create = (newUser, result) => {
                         result(err,null);
                         return;
                     }
-                    console.log("User successfully registered\nResult: ",{id: res.insertId, username: newUser.username, email: newUser.email, fname: newUser.fname, lname: newUser.lname});
-                    result(null,{id: res.insertId, username: newUser.username, email: newUser.email, fname: newUser.fname, lname: newUser.lname});
+                    console.log("User successfully registered\nResult: ",{userid: res.insertId, username: newUser.username, email: newUser.email, fname: newUser.fname, lname: newUser.lname});
+                    result(null,{userid: res.insertId, username: newUser.username, email: newUser.email, fname: newUser.fname, lname: newUser.lname});
                 });
             }
             else
@@ -39,16 +39,44 @@ User.create = (newUser, result) => {
                         result(err,null);
                         return;
                     }
-                    console.log("User successfully registered\nResult: ",{id: res.insertId, username: newUser.username, email: newUser.email, fname: newUser.fname, lname: newUser.lname, admin: newUser.admin});
-                    result(null,{id: res.insertId, username: newUser.username, email: newUser.email, fname: newUser.fname, lname: newUser.lname, admin: newUser.admin});
+                    console.log("User successfully registered\nResult: ",{userid: res.insertId, username: newUser.username, email: newUser.email, fname: newUser.fname, lname: newUser.lname, admin: newUser.admin});
+                    result(null,{userid: res.insertId, username: newUser.username, email: newUser.email, fname: newUser.fname, lname: newUser.lname, admin: newUser.admin});
                 });
             }
         });
     });
 };
-
+User.authenticateByUserNamePassword = (username, password, result) => {
+  mysql.query(`SELECT * FROM User WHERE username = '${username}'`, (err, res) => {
+      if(err)
+      {
+          console.log("ERROR: ", err);
+          result(err,null);
+          return;
+      }
+      if(res.length)
+      {
+          bcrypt.compare(password,res[0].password,(err, isValid) =>{
+              if(err)
+              {
+                  console.log("ERROR: ", err);
+                  result(err,null);
+              }
+              else
+              {
+                  console.log("User: ", {userid: res[0].userid, authenticated: isValid});
+                  result(null, {userid: res[0].userid, authenticated: isValid});
+              }
+          });
+      }
+      else
+      {
+          result({kind: "not_found"},null);
+      }
+  });
+};
 User.findById = (userId, result) => {
-  mysql.query(`SELECT username, email, fname, lname, admin FROM User WHERE userid = ${userId}`, (err,res) => {
+  mysql.query(`SELECT userid, username, email, fname, lname, admin FROM User WHERE userid = ${userId}`, (err,res) => {
       if(err)
       {
           console.log("ERROR: ", err);
@@ -67,7 +95,7 @@ User.findById = (userId, result) => {
 };
 
 User.findByUsername = (username, result) => {
-    mysql.query(`SELECT username, email, fname, lname, admin FROM User WHERE username = '${username}'`,(err, res) => {
+    mysql.query(`SELECT userid, username, email, fname, lname, admin FROM User WHERE username = '${username}'`,(err, res) => {
         if(err)
         {
             console.log("ERROR: ", err);
@@ -86,7 +114,7 @@ User.findByUsername = (username, result) => {
 };
 
 User.getAll =  result => {
-  mysql.query("SELECT username, email, fname, lname, admin FROM User", (err, res) => {
+  mysql.query("SELECT userid, username, email, fname, lname, admin FROM User", (err, res) => {
       if(err)
       {
           console.log("ERROR: ", err);
@@ -112,8 +140,8 @@ User.updateInfoById = (id,user,result) => {
                 result({ kind: "not_found" }, null);
                 return;
             }
-            console.log("User info successfully updated\nResult: ",{id: id, ...user});
-            result(null, {id: id, ...user});
+            console.log("User info successfully updated\nResult: ",{userid: id, ...user});
+            result(null, {userid: id, ...user});
         });
 };
 User.updatePasswordById = (id, password, result) => {
@@ -133,8 +161,8 @@ User.updatePasswordById = (id, password, result) => {
                     result({ kind: "not_found" }, null);
                     return;
                 }
-                console.log("User password successfully updated\nResult: ",{id: id, password: password});
-                result(null, {id: id, password: password});
+                console.log("User password successfully updated\nResult: ",{userid: id, password: password});
+                result(null, {userid: id, password: password});
             });
         });
     });
@@ -153,8 +181,8 @@ User.updateAdminStatusById = (id, admin, result) => {
           result({ kind: "not_found" }, null);
           return;
       }
-      console.log("User admin status successfully updated\nResult: ",{id: id, admin: admin});
-      result(null, {id: id, admin: admin});
+      console.log("User admin status successfully updated\nResult: ",{userid: id, admin: admin});
+      result(null, {userid: id, admin: admin});
   });
 };
 User.remove = (id, result) => {

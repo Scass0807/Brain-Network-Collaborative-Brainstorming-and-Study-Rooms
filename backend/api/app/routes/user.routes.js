@@ -1,4 +1,5 @@
 const express = require('express');
+const auth = require("../auth/auth.js");
 const router = express.Router();
 
 const users = require("../controllers/user.controller.js");
@@ -16,19 +17,19 @@ router.get("/:userid", users.findOne);
 router.get("/username/:username", users.findOne);
     
 //Update User's profile information with userid
-router.put("/:userid/profile", users.updateInfo);
+router.put("/user/profile", auth.authenticateToken,users.updateInfo);
 
 //Update User's password with userid
-router.put("/:userid/password", users.updatePassword);
+router.put("/user/password",auth.authenticateToken, users.updatePassword);
 
 //Update User's admin status with userid
-router.put("/:userid/permissions", users.updateAdminStatus);
+router.put("/:userid/permissions",auth.authenticateToken, users.updateAdminStatus);
 
 //Delete a  User with userid
-router.delete("/:userid", users.delete);
+router.delete("/:userid",auth.authenticateToken, users.delete);
 
 //Delete all Users
-router.delete("/", users.deleteAll);
+router.delete("/",auth.authenticateToken, users.deleteAll);
 
 module.exports = router;
     

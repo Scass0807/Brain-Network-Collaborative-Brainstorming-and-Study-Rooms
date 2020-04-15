@@ -17,8 +17,8 @@ Meeting.create = (newMeeting, result) => {
             result(err,null);
             return;
         }
-        console.log("Meeting successfully created\nResult: ",{id: res.insertId, ...newMeeting});
-        result(null,{id: res.insertId, ...newMeeting});
+        console.log("Meeting successfully created\nResult: ",{meetingId: res.insertId, ...newMeeting});
+        result(null,{meetingId: res.insertId, ...newMeeting});
     });
 };
 
@@ -88,8 +88,8 @@ Meeting.updateById = (meetingId, meeting, result) => {
                 result({ kind: "not_found" }, null);
                 return;
             }
-            console.log("Meeting info successfully updated\nResult: ",{id: meetingId, ...meeting});
-            result(null, {id: meetingId, ...meeting});
+            console.log("Meeting info successfully updated\nResult: ",{meetingId: meetingId, ...meeting});
+            result(null, {meetingId: meetingId, ...meeting});
         });
 };
 Meeting.updateRoomById = (meetingId, roomId, result) => {
@@ -105,8 +105,8 @@ Meeting.updateRoomById = (meetingId, roomId, result) => {
                 result({kind: "not_found"}, null);
                 return;
             }
-            console.log("Meeting roomId successfully updated\nResult: ", {id: meetingId, roomId: roomId});
-            result(null, {id: meetingId, roomId: roomId});
+            console.log("Meeting roomId successfully updated\nResult: ", {meetingId: meetingId, roomId: roomId});
+            result(null, {meetingId: meetingId, roomId: roomId});
         });
 };
 

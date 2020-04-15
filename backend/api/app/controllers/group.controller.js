@@ -13,7 +13,7 @@ exports.create = (req, res) => {
   //Create group
   const group = new Group ({
       name: req.body.name,
-      managerId: req.body.managerId
+      managerId: req.user.userid
   });
 
   //Store group in db
@@ -264,7 +264,7 @@ exports.delete = (req, res) => {
         }
         else
         {
-            res.send({message: `User successfully deleted!`});
+            res.send({message: `Group successfully deleted!`});
         }
     });
 };

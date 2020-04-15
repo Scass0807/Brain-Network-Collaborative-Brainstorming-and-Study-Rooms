@@ -14,13 +14,13 @@ Group.create = (newGroup, result) => {
             result(err,null);
             return;
         }
-        console.log("Group successfully created\nResult: ",{id: res.insertId, ...newGroup});
-        result(null,{id: res.insertId, ...newGroup});
+        console.log("Group successfully created\nResult: ",{groupId: res.insertId, ...newGroup});
+        result(null,{groupId: res.insertId, ...newGroup});
     });
 };
 
 Group.findById = (groupId, result) => {
-    mysql.query(`SELECT * FROM \`Group\` WHERE gr.groupId = ${groupId}`, (err,res) => {
+    mysql.query(`SELECT * FROM \`Group\` WHERE groupId = ${groupId}`, (err,res) => {
         if(err)
         {
             console.log("ERROR: ", err);
@@ -39,7 +39,7 @@ Group.findById = (groupId, result) => {
 };
 
 Group.findByName = (name, result) => {
-    mysql.query(`SELECT * FROM \`Group\` gr, WHERE name = ${name}`,(err, res) => {
+    mysql.query(`SELECT * FROM \`Group\` WHERE name = '${name}'`,(err, res) => {
         if(err)
         {
             console.log("ERROR: ", err);
@@ -84,7 +84,7 @@ Group.getAll =  result => {
 };
 
 Group.updateById = (id, group, result) => {
-    mysql.query("UPDATE `Group` SET name = ?, managerId = ?, WHERE groupId = ?",
+    mysql.query("UPDATE `Group` SET name = ?, managerId = ? WHERE groupId = ?",
         [group.name, group.managerId, id], (err, res) => {
             if(err)
             {
@@ -98,8 +98,8 @@ Group.updateById = (id, group, result) => {
                 result({ kind: "not_found" }, null);
                 return;
             }
-            console.log("Group successfully updated\nResult: ",{id: id, ...group});
-            result(null, {id: id, ...group});
+            console.log("Group successfully updated\nResult: ",{groupId: id, ...group});
+            result(null, {groupId: id, ...group});
         });
 };
 

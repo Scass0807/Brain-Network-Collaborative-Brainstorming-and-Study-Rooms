@@ -16,8 +16,8 @@ Room.create = (room, result) => {
             result(err,null);
             return;
         }
-        console.log("Room successfully added \nResult: ",{room});
-        result(null,{room});
+        console.log("Room successfully added \nResult: ",{roomId:res.insertId, ...room});
+        result(null,{roomId:res.insertId, ...room});
     });
 };
 
@@ -67,8 +67,8 @@ Room.updateById = (id, room, result) => {
                 result({ kind: "not_found" }, null);
                 return;
             }
-            console.log("Room successfully updated\nResult: ",{id: id, ...room});
-            result(null, {id: id, ...room});
+            console.log("Room successfully updated\nResult: ",{roomId: id, ...room});
+            result(null, {roomId: id, ...room});
         });
 };
 
@@ -87,8 +87,8 @@ Room.updateRoomNameById = (id, roomName, result) => {
                 result({ kind: "not_found" }, null);
                 return;
             }
-            console.log("Room successfully updated\nResult: ",{id: id, roomName: roomName});
-            result(null, {id: id, roomName: roomName});
+            console.log("Room successfully updated\nResult: ",{roomId: id, roomName: roomName});
+            result(null, {roomId: id, roomName: roomName});
         });
 };
 
@@ -107,8 +107,8 @@ Room.updateClosedTimeById = (id, closedTime, result) => {
                 result({ kind: "not_found" }, null);
                 return;
             }
-            console.log("Room successfully updated\nResult: ",{id: id, closedTime: closedTime});
-            result(null, {id: id, ...group});
+            console.log("Room successfully updated\nResult: ",{roomId: id, closedTime: closedTime});
+            result(null, {roomId: id, closedTime: closedTime});
         });
 };
 
