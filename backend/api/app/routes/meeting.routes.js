@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-
+const auth = require("../auth/auth.js");
 const meetings = require("../controllers/meeting.controller.js");
 
 //Create Meeting
-router.post("/", meetings.create);
+router.post("/", auth.authenticateToken, meetings.create);
 
 //Get all Meetings
 router.get("/", meetings.findAll);
@@ -17,15 +17,15 @@ router.get("/:meetingId", meetings.findOne);
 router.get("/admin/:adminId", meetings.findByAdmin);
 
 //Update Meeting information with meetingId
-router.put("/:meetingId", meetings.update);
+router.put("/:meetingId", auth.authenticateToken, meetings.update);
 
 //Update Meeting room with meetingId
-router.put("/:meetingId/room", meetings.updateRoom);
+router.put("/:meetingId/room", auth.authenticateToken, meetings.updateRoom);
 
 //Delete a  Meeting with meetingId
-router.delete("/:meetingId", meetings.delete);
+router.delete("/:meetingId", auth.authenticateToken, meetings.delete);
 
 //Delete all Meetings
-router.delete("/", meetings.deleteAll);
+router.delete("/", auth.authenticateToken, meetings.deleteAll);
 
 module.exports = router;

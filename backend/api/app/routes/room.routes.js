@@ -4,7 +4,7 @@ const router = express.Router();
 const rooms = require("../controllers/room.controller.js");
 
 //Create Room
-router.post("/", rooms.create);
+router.post("/",rooms.create);
 
 //Get all Rooms
 router.get("/", rooms.findAll);

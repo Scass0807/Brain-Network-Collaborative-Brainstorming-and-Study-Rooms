@@ -1,4 +1,6 @@
 const MeetingData = require("../models/meeting_data.model.js");
+const Meeting = require("../models/meeting.model.js");
+const User = require("../models/user.model.js");
 
 exports.create = (req,res) => {
     //Check if request is valid
@@ -10,7 +12,7 @@ exports.create = (req,res) => {
     //Create meeting_data
     const meeting_data = new MeetingData({
         meetingId: req.body.meetingId,
-        userid: req.body.userid,
+        userid: req.user.userid,
         timeRecorded: req.body.timeRecorded,
         filename: req.body.filename
     });
@@ -30,147 +32,63 @@ exports.create = (req,res) => {
 };
 
 exports.findAll = (req, res) => {
-    return new  Promise((resolve, reject) => {
         MeetingData.getAll((err, data) => {
             if(err)
             {
-                reject(err);
+                res.status(500).send({
+                    message: err.message || "An internal server error occurred while getting all meeting_data."
+                });
             }
             else
             {
-                resolve(data);
+                res.send(data);
             }
         });
-    }).then((data)=> {
-        for (var index = 0; index<data.length;index++)
-        {
-            var meetingId = data[index]["meetingId"];
-            var userid = data[index]["userid"];
-            data[index]["meeting"] = `/meetings/${meetingId}`;
-            data[index]["meeting"] = `/meetings/${meetingId}`;
-            delete data[index]["meetingId"];
-            delete data[index]["userid"];
-        }
-        return data;
-    },(err) => {
-        res.status(500).send({
-            message: err.message || "An internal server error occurred while getting all meeting_data."
-        });
-    }).then((data) => {
-        res.send(data);
-    },(err) => {
-        res.status(500).send({
-            message: err.message || "An internal server error occurred while adding links"
-        });
-    });
 };
 
 exports.findAllMeetingDataByMeeting = (req, res) => {
-    return new  Promise((resolve, reject) => {
         MeetingData.findAllMeetingDataByMeetingId(req.params.meetingId,(err, data) => {
             if(err)
             {
-                reject(err);
+                res.status(500).send({
+                    message: err.message || "An internal server error occurred while getting all meeting's meeting_data."
+                });
             }
             else
             {
-                resolve(data);
+                res.send(data);
             }
         });
-    }).then((data)=> {
-        for (var index = 0; index<data.length;index++)
-        {
-            var meetingId = data[index]["meetingId"];
-            var userid = data[index]["userid"];
-            data[index]["meeting"] = `/meetings/${meetingId}`;
-            data[index]["user"] = `/users/${userid}`;
-            delete data[index]["meetingId"];
-            delete data[index]["userid"];
-        }
-        return data;
-    },(err) => {
-        res.status(500).send({
-            message: err.message || "An internal server error occurred while getting all meeting's meeting_data."
-        });
-    }).then((data) => {
-        res.send(data);
-    },(err) => {
-        res.status(500).send({
-            message: err.message || "An internal server error occurred while adding links"
-        });
-    });
 };
 
 exports.findAllMeetingDataByMeetingAndUser = (req, res) => {
-    return new  Promise((resolve, reject) => {
         MeetingData.findAllMeetingDataByMeetingIdAndUserId(req.params.meetingId, req.params.userid,(err, data) => {
             if(err)
             {
-                reject(err);
+                res.status(500).send({
+                    message: err.message || "An internal server error occurred while getting all meetings meeting_data by user."
+                });
             }
             else
             {
-                resolve(data);
+                res.send(data);
             }
         });
-    }).then((data)=> {
-        for (var index = 0; index<data.length;index++)
-        {
-            var meetingId = data[index]["meetingId"];
-            var userid = data[index]["userid"];
-            data[index]["meeting"] = `/meetings/${meetingId}`;
-            data[index]["user"] = `/users/${userid}`;
-            delete data[index]["meetingId"];
-            delete data[index]["userid"];
-        }
-        return data;
-    },(err) => {
-        res.status(500).send({
-            message: err.message || "An internal server error occurred while getting all meetings meeting_data by user."
-        });
-    }).then((data) => {
-        res.send(data);
-    },(err) => {
-        res.status(500).send({
-            message: err.message || "An internal server error occurred while adding links"
-        });
-    });
 };
 
 exports.findOne = (req, res) => {
-    return new  Promise((resolve, reject) => {
         MeetingData.findMeetingDataByMeetingIdAndDataId(req.params.meetingId, req.params.dataId,(err, data) => {
             if(err)
             {
-                reject(err);
+                res.status(500).send({
+                    message: err.message || "An internal server error occurred while getting  meeting_data."
+                });
             }
             else
             {
-                resolve(data);
+                res.send(data);
             }
         });
-    }).then((data)=> {
-        for (var index = 0; index<data.length;index++)
-        {
-            var meetingId = data[index]["meetingId"];
-            var userid = data[index]["userid"];
-            data[index]["meeting"] = `/meetings/${meetingId}`;
-            data[index]["user"] = `/users/${userid}`;
-            delete data[index]["meetingId"];
-            delete data[index]["userid"];
-        }
-        return data;
-    },(err) => {
-        res.status(500).send({
-            message: err.message || "An internal server error occurred while getting  meeting_data."
-        });
-    }).then((data) => {
-        res.send(data);
-    },(err) => {
-        res.status(500).send({
-            message: err.message || "An internal server error occurred while adding links"
-        });
-    });
 };
 
 exports.update = (req, res) => {
@@ -181,28 +99,33 @@ exports.update = (req, res) => {
             message: "Request body must contain content"
         });
     }
+    MeetingData.findMeetingDataByMeetingIdAndDataId(req.params.meetingId, req.params.dataId, (err, meetingDataData) => {
+        Meeting.findById(req.params.meetingId, (err, meetingData) => {
+            if ((meetingDataData.userid != req.user.userid) && (meetingData.adminId != req.user.userid)) {
+                res.status(403).send({
+                    message: "You are not the meeting admin or data owner"
+                });
+                return;
+            }
 
-    MeetingData.updateByMeetingIdAndDataId(req.params.meetingId,req.params.dataId,
-        new MeetingData(req.body), (err, data) => {
-            if(err)
-            {
-                if (err.kind === "not_found") {
-                    res.status(404).send({
-                        message: `MeetingData not found with meetingId ${req.params.meetingId}, dataId ${req.params.dataId}.`
-                    });
-                }
-                else
-                {
-                    res.status(500).send({
-                        message: err.message ||  `An internal server error occurred while updating meeting_data with meetingId ${req.params.meetingId}, dataId ${req.params.dataId}.`
-                    });
-                }
-            }
-            else
-            {
-                res.send(data);
-            }
+            MeetingData.updateByMeetingIdAndDataId(req.params.meetingId, req.params.dataId,
+                new MeetingData(req.body), (err, data) => {
+                    if (err) {
+                        if (err.kind === "not_found") {
+                            res.status(404).send({
+                                message: `MeetingData not found with meetingId ${req.params.meetingId}, dataId ${req.params.dataId}.`
+                            });
+                        } else {
+                            res.status(500).send({
+                                message: err.message || `An internal server error occurred while updating meeting_data with meetingId ${req.params.meetingId}, dataId ${req.params.dataId}.`
+                            });
+                        }
+                    } else {
+                        res.send(data);
+                    }
+                });
         });
+    });
 };
 
 exports.updateFilename = (req, res) => {
@@ -213,87 +136,103 @@ exports.updateFilename = (req, res) => {
             message: "Request body must contain content"
         });
     }
-
-    MeetingData.updateFilenameByMeetingIdAndDataId(req.params.meetingId,req.params.dataId,req.body.filename, (err, data) => {
-        if(err)
-        {
-            if (err.kind === "not_found") {
-                res.status(404).send({
-                    message: `MeetingData not found with meetingId ${req.params.meetingId}, dataId ${req.params.dataId}.`
+    MeetingData.findMeetingDataByMeetingIdAndDataId(req.params.meetingId, req.params.dataId, (err, meetingDataData) => {
+        Meeting.findById(req.params.meetingId, (err, meetingData) => {
+            if ((meetingDataData.userid != req.user.userid) && (meetingData.adminId != req.user.userid)) {
+                res.status(403).send({
+                    message: "You are not the meeting admin or data owner"
                 });
+                return;
             }
-            else
-            {
-                res.status(500).send({
-                    message: err.message ||  `An internal server error occurred while updating meeting_data filename with meetingId ${req.params.meetingId}, dataId ${req.params.dataId}.`
-                });
-            }
-        }
-        else
-        {
-            res.send(data);
-        }
+            MeetingData.updateFilenameByMeetingIdAndDataId(req.params.meetingId, req.params.dataId, req.body.filename, (err, data) => {
+                if (err) {
+                    if (err.kind === "not_found") {
+                        res.status(404).send({
+                            message: `MeetingData not found with meetingId ${req.params.meetingId}, dataId ${req.params.dataId}.`
+                        });
+                    } else {
+                        res.status(500).send({
+                            message: err.message || `An internal server error occurred while updating meeting_data filename with meetingId ${req.params.meetingId}, dataId ${req.params.dataId}.`
+                        });
+                    }
+                } else {
+                    res.send(data);
+                }
+            });
+        });
     });
-
 };
 
 exports.delete = (req, res) => {
-    MeetingData.remove(req.params.meetingId,req.params.dataId,(err,data) => {
-        if(err)
-        {
-            if (err.kind === "not_found") {
-                res.status(404).send({
-                    message: `MeetingData not found with meetingId ${req.params.meetingId}, dataId ${req.params.dataId}.`
+    MeetingData.findMeetingDataByMeetingIdAndDataId(req.params.meetingId, req.params.dataId, (err, meetingDataData) => {
+        Meeting.findById(req.params.meetingId, (err, meetingData) => {
+            if ((meetingDataData.userid != req.user.userid) && (meetingData.adminId != req.user.userid)) {
+                res.status(403).send({
+                    message: "You are not the meeting admin or data owner"
                 });
+                return;
             }
-            else
-            {
-                res.status(500).send({
-                    message: err.message ||  `An internal server error occurred while deleting meeting_data with meetingId ${req.params.meetingId}, dataId ${req.params.dataId}.`
-                });
-            }
-        }
-        else
-        {
-            res.send({message: `MeetingData deleted!`});
-        }
+            MeetingData.remove(req.params.meetingId, req.params.dataId, (err, data) => {
+                if (err) {
+                    if (err.kind === "not_found") {
+                        res.status(404).send({
+                            message: `MeetingData not found with meetingId ${req.params.meetingId}, dataId ${req.params.dataId}.`
+                        });
+                    } else {
+                        res.status(500).send({
+                            message: err.message || `An internal server error occurred while deleting meeting_data with meetingId ${req.params.meetingId}, dataId ${req.params.dataId}.`
+                        });
+                    }
+                } else {
+                    res.send({message: `MeetingData deleted!`});
+                }
+            });
+        });
     });
 };
 
 exports.deleteAllMeetingDataByMeeting = (req, res) => {
-    MeetingData.removeAllMeetingDataByMeetingId(req.params.meetingId, (err, data) => {
-        if(err)
-        {
-            if (err.kind === "not_found") {
-                res.status(404).send({
-                    message: `MeetingData not found for meeting with meetingId ${req.params.meetingId}.`
-                });
-            }
-            else
-            {
-                res.status(500).send({
-                    message: err.message ||  "An internal server error occurred while deleting meeting's meeting_data."
-                });
-            }
+    Meeting.findById(req.params.meetingId, (err, meetingData) => {
+        if (meetingData.adminId != req.user.userid) {
+            res.status(403).send({
+                message: "You are not the meeting admin"
+            });
+            return;
         }
-        else
-        {
-            res.send({message: `Group's members deleted!`});
-        }
+        MeetingData.removeAllMeetingDataByMeetingId(req.params.meetingId, (err, data) => {
+            if (err) {
+                if (err.kind === "not_found") {
+                    res.status(404).send({
+                        message: `MeetingData not found for meeting with meetingId ${req.params.meetingId}.`
+                    });
+                } else {
+                    res.status(500).send({
+                        message: err.message || "An internal server error occurred while deleting meeting's meeting_data."
+                    });
+                }
+            } else {
+                res.send({message: `Group's members deleted!`});
+            }
+        });
     });
 };
 
 exports.deleteAll = (req, res) => {
-    MeetingData.removeAll((err, data) => {
-        if(err)
-        {
-            res.status(500).send({
-                message: err.message ||  `An internal server error occurred while deleting all meetings' meeting_data.`
+    User.findById(req.user.userid, (err, adminData) => {
+        if (adminData.admin != 1) {
+            res.status(403).send({
+                message: "You are not an admin"
             });
+            return;
         }
-        else
-        {
-            res.send({message: `All meetings' meeting_data successfully deleted!`});
-        }
+        MeetingData.removeAll((err, data) => {
+            if (err) {
+                res.status(500).send({
+                    message: err.message || `An internal server error occurred while deleting all meetings' meeting_data.`
+                });
+            } else {
+                res.send({message: `All meetings' meeting_data successfully deleted!`});
+            }
+        });
     });
 };
