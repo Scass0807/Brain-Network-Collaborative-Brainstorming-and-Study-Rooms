@@ -175,7 +175,7 @@ const logout = (req,res) => {
     res.send("User logged out");
 };
 
-router.post('/login', User.authenticate, login);
+router.post('/login', User.authenticate, login); // login
 router.post('/refreshToken', refreshToken);
 module.exports = {
     router:router,
