@@ -20,12 +20,12 @@ router.get("/name/:name", groups.findOne);
 router.get("/manager/managerId", groups.findByManager);
 
 //Update Group information with groupId
-router.put("/:groupId", groups.update);
+router.put("/:groupId",auth.authenticateToken, groups.update);
 
 //Delete a  Group with groupId
-router.delete("/:groupId", groups.delete);
+router.delete("/:groupId", auth.authenticateToken, groups.delete);
 
 //Delete all Groups
-router.delete("/", groups.deleteAll);
+router.delete("/", auth.authenticateToken, groups.deleteAll);
 
 module.exports = router;

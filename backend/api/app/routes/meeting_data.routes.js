@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const meetings = require("../controllers/meeting.controller.js");
+const auth = require("../auth/auth.js")
 
 const meeting_data = require("../controllers/meeting_data.controller.js");
 
 //Create meeting_data
-router.post("/data", meeting_data.create);
+router.post("/data", meeting_data.create, auth.authenticateToken);
 
 //Get all meeting_data
 router.get("/data", meeting_data.findAll);
@@ -19,18 +21,18 @@ router.get("/:meetingId/data/users/:userid", meeting_data.findAllMeetingDataByMe
 router.get("/:meetingId/data/:dataId", meeting_data.findOne);
 
 //Update a single meeting_data with meetingId and dataId
-router.put("/:meetingId/data/:dataId", meeting_data.update);
+router.put("/:meetingId/data/:dataId",auth.authenticateToken, meeting_data.update);
 
 //Update a single meeting_data's filename with meetingId and dataId
-router.put("/:meetingId/data/:dataId/filename", meeting_data.updateFilename);
+router.put("/:meetingId/data/:dataId/filename",auth.authenticateToken, meeting_data.updateFilename);
 
 //Delete a single meeting_data with meetingId and dataId
-router.delete("/:meetingId/data/:dataId", meeting_data.delete);
+router.delete("/:meetingId/data/:dataId",auth.authenticateToken, meeting_data.delete);
 
 //Get all meeting's meeting_data
-router.delete("/:meetingId/data", meeting_data.deleteAllMeetingDataByMeeting);
+router.delete("/:meetingId/data",auth.authenticateToken, meeting_data.deleteAllMeetingDataByMeeting);
 
 //Delete all meeting_data
-router.delete("/data", meeting_data.deleteAll);
+router.delete("/data", auth.authenticateToken, meeting_data.deleteAll);
 
 module.exports = router;

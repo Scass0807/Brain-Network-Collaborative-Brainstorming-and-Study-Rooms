@@ -59,116 +59,58 @@ exports.authenticate = (req,res,next) => {
 };
 //Get all users from db
 exports.findAll =  (req, res) => {
-  return new  Promise((resolve, reject) => {
       User.getAll((err, data) => {
           if(err)
           {
-              reject(err);
+              res.status(500).send({
+                  message: err.message || "An internal server error occurred while getting all users."
+              });
           }
           else
           {
-              resolve(data);
+              res.send(data);
           }
       });
-  }).then((data)=> {
-      for (var index = 0; index<data.length;index++)
-      {
-          var userid = data[index]["userid"];
-          data[index]["user's_groups"] = `/users/${userid}/groups`;
-          data[index]["schedules"] = `/schedules/users/${userid}`;
-          data[index]["meetings"] = `/meetings/admin/${userid}`;
-      }
-      return data;
-  },(err) => {
-      res.status(500).send({
-          message: err.message || "An internal server error occurred while getting all users."
-      });
-  }).then((data) => {
-      res.send(data);
-  },(err) => {
-      res.status(500).send({
-          message: err.message || "An internal server error occurred while adding links"
-      });
-  });
 };
 exports.findOne = (req, res) => {
     if(req.param('userid') === '' || req.param('userid') === undefined)
     {
-        return new  Promise((resolve, reject) => {
             User.findByUsername(req.params.username, (err, data) => {
                 if(err)
                 {
-                    reject(err);
+                    if (err.kind === "not_found") {
+                        res.status(404).send({
+                            message: `User not found with username ${req.params.username}.`
+                        });
+                    }
+                    else
+                    {
+                        res.status(500).send({
+                            message: err.message ||  `An internal server error occurred while getting user with username ${req.params.username}.`
+                        });
+                    }
                 }
                 else
                 {
-                    resolve(data);
+                    res.send(data);
                 }
             });
-        }).then((data) => {
-            var userid = data["userid"];
-            data["user's_groups"] = `/users/${userid}/groups`;
-            data["schedules"] = `/schedules/users/${userid}`;
-            data["meetings"] = `/meetings/admin/${userid}`;
-            return data;
-        },(err) =>{
-            if (err.kind === "not_found") {
-                res.status(404).send({
-                    message: `User not found with username ${req.params.username}.`
-                });
-            }
-            else
-            {
-                res.status(500).send({
-                    message: err.message ||  `An internal server error occurred while getting user with username ${req.params.username}.`
-                });
-            }
-        }).then((data) => {
-            res.send(data);
-        },(err) => {
-            res.status(500).send({
-                message: err.message || "An internal server error occurred while adding links"
-            });
-        });
-
     }
-    else
-    {
-        return new  Promise((resolve, reject) => {
-            User.findById(req.params.userid, (err, data) => {
-                if(err)
-                {
-                    reject(err);
+    else {
+        User.findById(req.params.userid, (err, data) => {
+            if (err) {
+                if (err.kind === "not_found") {
+                    res.status(404).send({
+                        message: `User not found with userid ${req.params.userid}.`
+                    });
+                } else {
+                    res.status(500).send({
+                        message: err.message || `An internal server error occurred while getting user with userid ${req.params.userid}.`
+                    });
                 }
-                else
-                {
-                    resolve(data);
-                }
-            });
-        }).then((data) => {
-            var userid = data["userid"];
-            data["user's_groups"] = `/users/${userid}/groups`;
-            data["schedules"] = `/schedules/users/${userid}`;
-            data["meetings"] = `/meetings/admin/${userid}`;
-            return data;
-        },(err) =>{
-            if (err.kind === "not_found") {
-                res.status(404).send({
-                    message: `User not found with userid ${req.params.userid}.`
-                });
+            } else {
+                res.send(data);
             }
-            else
-            {
-                res.status(500).send({
-                    message: err.message ||  `An internal server error occurred while getting user with userid ${req.params.userid}.`
-                });
-            }
-        }).then((data) => {
-            res.send(data);
-        },(err) => {
-            res.status(500).send({
-                message: err.message || "An internal server error occurred while adding links"
-            });
         });
     }
 };
@@ -319,7 +261,7 @@ exports.deleteAll = (req, res) => {
     User.findById(req.user.userid, (err, adminData) => {
         if (adminData.admin != 1) {
             res.status(403).send({
-                message: "You are not the user to be deleted or an admin"
+                message: "You are not an admin"
             });
             return;
         }
