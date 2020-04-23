@@ -24,9 +24,10 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css", "https://awwapp.com/static/widget/css/toolbar_style.css"
             ],
-            "scripts": []
+            "scripts": ["https://code.jquery.com/jquery-3.3.1.min.js",
+                      "https://awwapp.com/static/widget/js/aww3.min.js"]
           },
           "configurations": {
             "production": {
@@ -89,9 +90,10 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css", "https://awwapp.com/static/widget/css/toolbar_style.css"
             ],
-            "scripts": []
+            "scripts": ["https://code.jquery.com/jquery-3.3.1.min.js",
+                        "https://awwapp.com/static/widget/js/aww3.min.js"]
           }
         },
         "lint": {

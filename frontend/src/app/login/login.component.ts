@@ -11,7 +11,11 @@ import {Router} from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
- loginForm: FormGroup;
+  constructor() { }
+
+  ngOnInit() {
+  }
+ /*loginForm: FormGroup;
  invalidLogin = false;
  message: any;
   constructor(private formBuilder: FormBuilder,
@@ -50,5 +54,5 @@ export class LoginComponent implements OnInit {
       }
     });
 
-  }
+  }*/
 }
