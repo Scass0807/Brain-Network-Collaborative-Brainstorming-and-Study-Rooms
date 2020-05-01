@@ -9,6 +9,7 @@ exports.create = (req,res) => {
             message: "Request body must contain content"
         });
     }
+    console.log(req.user)
     //Create meeting_data
     const meeting_data = new MeetingData({
         meetingId: req.body.meetingId,

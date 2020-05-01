@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import {TheboardComponent} from "./theboard/theboard.component";
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

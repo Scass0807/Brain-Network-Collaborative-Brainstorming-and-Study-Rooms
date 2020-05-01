@@ -24,9 +24,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
-            ],
-            "scripts": []
+              "src/styles.css"],
+            "scripts": ["src/assets/js/sample_toolbar.js"]
           },
           "configurations": {
             "production": {
@@ -91,7 +90,7 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": ["src/assets/js/sample_toolbar.js"]
           }
         },
         "lint": {

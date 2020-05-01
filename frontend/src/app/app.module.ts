@@ -15,6 +15,7 @@ import { GroupcreateComponent } from './groupcreate/groupcreate.component';
 import { GroupdisplayComponent } from './groupdisplay/groupdisplay.component';
 import { PremeetingComponent } from './premeeting/premeeting.component';
 import { ScheduleComponent } from './schedule/schedule.component';
+import {TheboardComponent} from "./theboard/theboard.component";
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { ScheduleComponent } from './schedule/schedule.component';
     GroupcreateComponent,
     GroupdisplayComponent,
     PremeetingComponent,
-    ScheduleComponent
+    ScheduleComponent,
+    TheboardComponent
   ],
   imports: [
     BrowserModule,
