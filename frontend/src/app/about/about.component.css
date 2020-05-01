@@ -1,16 +1,9 @@
-.card1 {
-  background-color: red;
-}
-.card2 {
-  background-color: green;
-}
-.card3 {
-  background-color: blue;
-}
-.card4 {
-  background-color: orangered;
-}
+
 p {
   text-align: left;
   display: inline-block;
+}
+.row {
+  margin-left: 10px;
+  margin-right: 10px;
 }

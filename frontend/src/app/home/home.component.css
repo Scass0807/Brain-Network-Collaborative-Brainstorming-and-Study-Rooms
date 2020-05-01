@@ -1,0 +1,17 @@
+img {
+  width: 100vw;
+  max-height: 40vh;
+}
+h2 {
+  text-align: center;
+}
+.desc {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.button-row
+{
+  text-align: center;
+  padding-bottom: 10px;
+}
